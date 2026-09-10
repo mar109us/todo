@@ -6,6 +6,38 @@
       <title>Todo or not todo</title>
    </head>
    <style>
+      #app {
+         display: flex;
+         flex-direction: column;
+      }
+      body {
+         margin: 0;
+         height: 100vh;
+         background: linear-gradient(90deg, #efe6da 0%, #e5d7ca 16.667%, #dac7b9 33.333%, #cfb6a9 50%, #c4a699 66.667%, #b9968b 83.333%, #af887e 100%);
+      }
+      .header {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+      }
+      input {
+         width: 50%;
+      }
+      button {
+         height: 30px;
+      }
+      input,
+      button {
+         border-radius: 5px;
+         border: none;
+         padding: 8px;
+      }
+      .edit {
+      }
+      .delete {
+         color: wheat;
+         background: linear-gradient(315deg, #410500 0%, #6b0000 25%, #9d0000 50%, #cf1100 75%, #fa3200 100%);
+      }
       table {
          border-collapse: collapse;
       }
@@ -14,11 +46,7 @@
          padding: 8px;
          display: flex;
          justify-content: space-between;
-      }
-
-      #app {
-         display: flex;
-         flex-direction: column;
+         align-items: center;
       }
    </style>
    <body>
@@ -28,6 +56,7 @@
       const app = document.getElementById("app");
 
       let list = ["item test 1", "item test 2", "item test 3"];
+      let editIndex = null;
 
       function updateView() {
          app.innerHTML = buildView();
@@ -36,22 +65,49 @@
 
       function buildView() {
          let view = `
-         <input onchange="addItem(this.value)"></input>
+         <div class="header">
+            <h2>Todo or not todo</h2>
+            <input onchange="addItem(this.value)"></input>
+         </div>
          `;
+         view += constructList();
+         return view;
+      }
+
+      function constructList() {
+         let view = "";
          for (let i = 0; i < list.length; i++) {
+            let listItemComponent = `<span>${list[i]}</span>`;
+            if (editIndex === i) {
+               listItemComponent = `<input onchange="modifyItem(${i}, this.value)" value="${list[i]}"></input>`;
+            }
             view += `
             <table>
                <td>
-                  <span>${list[i]}</span>
+                  ${listItemComponent}
                   <span>
-                     <button onclick="editItem(${i})">edit</button>
-                     <button onclick="deleteItem(${i})">delete</button>
+                     <button class="edit" onclick="editItem(${i})">edit</button>
+                     <button class="delete" onclick="deleteItem(${i})">delete</button>
                   </span>
                </td>
             </table>
          `;
          }
          return view;
+      }
+      function modifyItem(index, value) {
+         list[index] = value;
+         editIndex = null;
+         updateView();
+      }
+
+      function editItem(index) {
+         if (editIndex === index) {
+            editIndex = null;
+         } else {
+            editIndex = index;
+         }
+         updateView();
       }
 
       function addItem(value) {
@@ -60,7 +116,7 @@
       }
 
       function deleteItem(value) {
-         list.splice(value, 1)
+         list.splice(value, 1);
          updateView();
       }
    </script>
