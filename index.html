@@ -1,11 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Todo or not todo</title>
-</head>
-<body>
-   
-</body>
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Todo or not todo</title>
+   </head>
+   <style>
+      table {
+         border-collapse: collapse;
+      }
+      td {
+         border-bottom: 1px solid black;
+         padding: 8px;
+         display: flex;
+         justify-content: space-between;
+      }
+
+      #app {
+         display: flex;
+         flex-direction: column;
+      }
+   </style>
+   <body>
+      <div id="app"></div>
+   </body>
+   <script>
+      const app = document.getElementById("app");
+
+      let list = ["item test 1", "item test 2", "item test 3"];
+
+      function updateView() {
+         app.innerHTML = buildView();
+      }
+      updateView();
+
+      function buildView() {
+         let view = `
+         <input onchange="addItem(this.value)"></input>
+         `;
+         for (let i = 0; i < list.length; i++) {
+            view += `
+            <table>
+               <td>
+                  <span>${list[i]}</span>
+                  <span>
+                     <button onclick="editItem(${i})">edit</button>
+                     <button onclick="deleteItem(${i})">delete</button>
+                  </span>
+               </td>
+            </table>
+         `;
+         }
+         return view;
+      }
+
+      function addItem(value) {
+         list.push(value);
+         updateView();
+      }
+
+      function deleteItem(value) {
+         list.splice(value, 1)
+         updateView();
+      }
+   </script>
 </html>
