@@ -93,17 +93,33 @@
          year: "numeric",
       });
 
-      let date = [dateNorwegian, dateNorwegian, dateNorwegian];
+      let date = [dateToday, dateToday, dateToday];
+      let dateToLocale = [];
+
       let dateIndex = null;
 
       let temporaryText = "";
-      let temporaryDate = dateNorwegian
+      let temporaryDate = dateNorwegian;
 
       function updateView() {
+         convertDate();
          app.innerHTML = buildView();
          document.getElementById("current-date").valueAsDate = new Date();
       }
       updateView();
+
+      function convertDate() {
+         dateToLocale = [];
+         for (let i of date) {
+            dateToLocale.push(
+               i.toLocaleDateString("nb-NO", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+               }),
+            );
+         }
+      }
 
       function buildView() {
          let view = `
@@ -126,7 +142,7 @@
          for (let i = 0; i < item.length; i++) {
             let listItemComponent = `
                <span>${item[i]}</span>
-               <span>${date[i]}</span>
+               <span>${dateToLocale[i]}</span>
             `;
             if (editIndex === i) {
                listItemComponent = `
